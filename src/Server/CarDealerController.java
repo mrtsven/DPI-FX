@@ -11,6 +11,11 @@ public class CarDealerController implements IListener {
     private static Connector connector;
     private List<String> availableCars;
 
+    public void init(){
+        connection();
+        setAvailableCars();
+    }
+
     @Override
     public void onMessage(Car message) {
         CarRequest carRequest = (CarRequest) message;

@@ -21,7 +21,7 @@ public class ClientLauncher extends Application {
         primaryStage.setScene(new Scene(root, 600, 450));
         primaryStage.show();
         clientController = new ClientController();
-//        clientController.init();
+        clientController.init();
     }
 
 
