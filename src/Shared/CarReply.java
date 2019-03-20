@@ -4,17 +4,19 @@ public class CarReply extends Car {
 
     // Car properties for Reply
     private String carName;
-    private String registration;
     private String color;
     private Integer doors;
     private Integer price;
 
+    public CarReply(String message){
+        type = CarRequestType.REPLY;
+        this.carName = message;
+    }
 
-    public CarReply(String carName, String registration, String color, Integer doors, Integer price) {
+    public CarReply(String carName, String color, Integer doors, Integer price) {
         type = CarRequestType.REPLY;
 
         this.carName = carName;
-        this.registration = registration;
         this.color = color;
         this.doors = doors;
         this.price = price;
@@ -26,14 +28,6 @@ public class CarReply extends Car {
 
     public void setCarName(String carName) {
         this.carName = carName;
-    }
-
-    public String getRegistration() {
-        return registration;
-    }
-
-    public void setRegistration(String registration) {
-        this.registration = registration;
     }
 
     public String getColor() {
@@ -66,6 +60,11 @@ public class CarReply extends Car {
 
     @Override
     public String toString() {
-        return "A " + getCarName() + ", the cost of it is: " + getPrice();
+        if(price == null){
+            return "We do not have a " + carName;
+        } else {
+            return "We have a " +
+                    carName + ' ' + ", it's color is " + color + ", it has " + doors + " doors and it's priced at " + price;
+        }
     }
 }

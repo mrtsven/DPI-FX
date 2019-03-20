@@ -1,29 +1,41 @@
 package Client;
 
 import Shared.*;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 import javax.jms.JMSException;
-import java.awt.*;
 
 
 public class ClientController implements IListener {
     private static Connector connector;
     @FXML
     public TextField txt_search;
-    // will remove locked most likely
-    private boolean locked = false;
+    @FXML
+    public TextArea view_1;
     private String userInput;
 
-    public void init(){
+    public void initialize(){
         startConnection();
     }
 
     @Override
     public void onMessage(Car message) {
         CarReply carReply = (CarReply) message;
+        if(carReply != null){
+            updateScreen(carReply.toString());
+        }
+    }
+
+    private void updateScreen(String message){
+        Platform.runLater(
+                () -> {
+                    view_1.setText(message);
+                }
+        );
     }
 
     private void startConnection(){
@@ -31,10 +43,6 @@ public class ClientController implements IListener {
     }
 
     public void on_search(ActionEvent actionEvent) {
-        try {
-            connector.sendMessage(new CarRequest(txt_search.getText()), "carSearch", "request");
-        } catch (JMSException e){
-            e.printStackTrace();
-        }
+        connector.sendMessage(new CarRequest(txt_search.getText()), "carSearch", "request");
     }
 }

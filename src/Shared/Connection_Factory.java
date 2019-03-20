@@ -11,7 +11,7 @@ public class Connection_Factory {
 
     Connection_Factory(){
         connectionFactory = new ActiveMQConnectionFactory(ActiveMQConnection.DEFAULT_BROKER_URL);
-        // Trust all packages for testing purposes.
+        // Trust all packages.
         ((ActiveMQConnectionFactory) connectionFactory).setTrustAllPackages(true);
     }
 

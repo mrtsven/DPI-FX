@@ -19,25 +19,35 @@ public class CarDealerController implements IListener {
     @Override
     public void onMessage(Car message) {
         CarRequest carRequest = (CarRequest) message;
-
+        CarReply reply = null;
         // set list-view
-//        System.out.println("Customer is looking for a: " + carRequest.getCar());
 
         if(checkForCar(carRequest.getCar())) {
             // do we have?
             System.out.println("We have a: " + carRequest.getCar());
 
-            try {
-                // Reply
-                System.out.println("Sending a reply to customer.");
-                CarReply reply = new CarReply("BMW", "ws-xs-tt", "blue", 3, 40000);
-                System.out.println("Sending this car: " + reply.getType());
-
-                connector.sendMessage(reply, "carResult", "reply");
-
-            } catch (JMSException e) {
-                e.printStackTrace();
+            // set Reply message
+            switch(carRequest.getCar()) {
+                case "BMW":
+                    reply = new CarReply(carRequest.getCar(),"black", 3, 40000);
+                    break;
+                case "Mercedes":
+                    reply = new CarReply(carRequest.getCar(), "red", 2, 800000);
+                    break;
+                case "SAAB":
+                    reply = new CarReply(carRequest.getCar(),"blue", 4, 20300);
+                    break;
+                case "Volkswagen":
+                    reply = new CarReply(carRequest.getCar(), "white", 3, 40000);
+                    break;
+                default: reply = new CarReply("Something went wrong");
             }
+            // Send reply
+            connector.sendMessage(reply, "carResult", "reply");
+        } else {
+            reply = new CarReply(carRequest.getCar());
+
+            connector.sendMessage(reply, "carResult", "reply");
         }
     }
 

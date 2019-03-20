@@ -46,20 +46,25 @@ public class Connector {
                 } catch (JMSException e){
                     e.printStackTrace();
                 }
-                // Old piece of code
-//                System.out.println("Received message: " + message);
             }
         });
     }
 
-    public void sendMessage(Car message, String channel, String typeMessage) throws JMSException {
+    public void sendMessage(Car message, String channel, String typeMessage){
         System.out.println("Sending message: " + session);
-        Destination producerDestination = session.createTopic(channel);
-        MessageProducer messageProducer = session.createProducer(producerDestination);
 
-        ObjectMessage objectMessage = session.createObjectMessage(message);
+        Destination producerDestination = null;
+        MessageProducer messageProducer = null;
+        ObjectMessage objectMessage = null;
 
-        messageProducer.send(objectMessage);
+        try {
+            producerDestination = session.createTopic(channel);
+            messageProducer = session.createProducer(producerDestination);
+            objectMessage = session.createObjectMessage(message);
+            messageProducer.send(objectMessage);
+        } catch (JMSException e) {
+            e.printStackTrace();
+        }
 
         System.out.println("A car " + typeMessage + " has been sent: " + message.toString());
     }
@@ -67,17 +72,9 @@ public class Connector {
     public void receiveMessage(Message message) throws JMSException {
 
         if (message instanceof ObjectMessage) {
-
             ObjectMessage objectMessage = (ObjectMessage) message;
             Car carMessage = (Car) objectMessage.getObject();
-//            if (carMessage instanceof  CarReply){
-//                System.out.println("REPLY CASE");
-//                listener.onMessage(carMessage);
-//            }
-//            if(carMessage instanceof  CarRequest){
-//                System.out.println("REQUEST CASE");
-//                listener.onMessage(carMessage);
-//            }
+
             if(carMessage.type != null){
                 switch (carMessage.type){
                     case REPLY:
